@@ -53,7 +53,6 @@ Example:
 		}
 
 		var shl = getShell()
-		fmt.Println(shl)
 
 		var arguments = append(shl.Arguments, shell.Command)
 
