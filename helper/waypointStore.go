@@ -1,10 +1,8 @@
 package helper
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 )
 
 type Waypoint struct {
@@ -44,40 +42,13 @@ func GetWaypoint(name string) Waypoint {
 	return Waypoint{}
 }
 
-var homeDir, _ = os.UserHomeDir()
-var storeDir = filepath.Join(homeDir, ".easycd.json")
-
 func getStore() []Waypoint {
-	var currentStore []Waypoint
-
-	if _, err := os.Stat(storeDir); os.IsNotExist(err) {
-		os.Create(storeDir)
-		os.WriteFile(storeDir, []byte("[]"), 0644)
-	}
-
-	var store, err = os.ReadFile(storeDir)
-	checkError(err)
-
-	err = json.Unmarshal([]byte(store), &currentStore)
-	checkError(err)
-
-	return currentStore
+	return GetConfiguration().Waypoints;
 }
 
 func saveStore(newStore []Waypoint) {
-	var marshalledStore, err = json.Marshal(newStore)
+	var config = GetConfiguration();
+	config.Waypoints = newStore;
 
-	checkError(err)
-
-	if _, err := os.Stat(storeDir); os.IsNotExist(err) {
-		os.Create(storeDir)
-	}
-
-	os.WriteFile(storeDir, []byte(string(marshalledStore)), 0644)
-}
-
-func checkError(err error){
-	if err != nil {
-		panic(err)
-	}
+	SaveConfiguration(config);
 }
