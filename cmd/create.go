@@ -16,7 +16,7 @@ var createCmd = &cobra.Command{
 	Use:   "create waypoint_name",
 	Short: "Create a waypoint",
 	Long: `Create a waypoint.
-By default will create the waypoint in the current directory.
+By default this command will create the waypoint in the current directory.
 	
 For example, you can create a waypoint called "home" that points to your current directory using the following command.
 	ecd create home`,
