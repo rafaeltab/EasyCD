@@ -29,10 +29,10 @@ func GetConfiguration() Configuration {
 	}
 
 	var config, err = os.ReadFile(configurationPath)
-	checkError(err)
+	CheckError(err)
 
 	err = json.Unmarshal([]byte(config), &currentConfig)
-	checkError(err)
+	CheckError(err)
 
 	return currentConfig
 }
@@ -40,7 +40,7 @@ func GetConfiguration() Configuration {
 func SaveConfiguration(config Configuration) {
 	var marshalledConfig, err = json.Marshal(config)
 
-	checkError(err)
+	CheckError(err)
 
 	if _, err := os.Stat(configurationPath); os.IsNotExist(err) {
 		os.Create(configurationPath)
@@ -49,7 +49,7 @@ func SaveConfiguration(config Configuration) {
 	os.WriteFile(configurationPath, []byte(string(marshalledConfig)), 0644)
 }
 
-func checkError(err error) {
+func CheckError(err error) {
 	if err != nil {
 		panic(err)
 	}
