@@ -12,7 +12,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "EasyCD",
+	Use:   "ecd",
 	Short: "A command line tool for creating waypoints for your file system, allowing you to easily go to common directories using a short command.",
 	Long: `A command line tool for creating waypoints for your file system, allowing you to easily go to common directories using a short command.
 
