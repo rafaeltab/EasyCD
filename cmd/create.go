@@ -20,7 +20,7 @@ var createCmd = &cobra.Command{
 By default this command will create the waypoint in the current directory.
 	
 For example, you can create a waypoint called "home" that points to your current directory using the following command.
-	ecd create home`,
+  ecd create home`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var waypointName = args[0]

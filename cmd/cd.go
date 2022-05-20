@@ -23,7 +23,7 @@ Changing the working directory can only be done by the shell using the cd comman
 This tool only aims to emulate the same functionality.
 
 Example:
-	ecd cd home
+  ecd cd home
 `,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

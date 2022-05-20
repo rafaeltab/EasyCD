@@ -17,13 +17,13 @@ var rootCmd = &cobra.Command{
 	Long: `A command line tool for creating waypoints for your file system, allowing you to easily go to common directories using a short command.
 
 To create a waypoint pointing to the current directory, simply run the command:
-	ecd create <waypoint name>
+  ecd create <waypoint name>
 
 After creating a waypoint, you can go to it using the command:
-	ecd cd <waypoint name>
+  ecd cd <waypoint name>
 
 You can also list all waypoints using the command:
-	ecd list
+  ecd list
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
@@ -50,5 +50,3 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-
