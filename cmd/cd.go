@@ -6,6 +6,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/rafaeltab/EasyCD/helper"
 	"github.com/spf13/cobra"
@@ -23,25 +25,91 @@ This tool only aims to emulate the same functionality.
 Example:
 	ecd cd home
 `,
-Args: cobra.ExactArgs(1),
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// fmt.Println("cd called", args)
 		var waypointName = args[0]
 		var waypoint = helper.GetWaypoint(waypointName)
-		fmt.Println(waypoint);
+
+		var shellName = cmd.Flag("shell").Value.String()
+
+		if shellName == "" {
+			shellName = "default"
+		}
+
+		var config = helper.GetConfiguration()
+
+		var shell helper.Shell
+
+		for i := 0; i < len(config.Shells); i++ {
+			if config.Shells[i].Name == shellName {
+				shell = config.Shells[i]
+			}
+		}
+
+		if shell.Name == "" {
+			fmt.Println("Shell not found")
+			os.Exit(1)
+		}
+
+		var shl = getShell()
+		fmt.Println(shl)
+
+		var arguments = append(shl.Arguments, shell.Command)
+
+		for i := 0; i < len(shell.Arguments); i++ {
+			if shell.Arguments[i] == "$DIR$" {
+				arguments = append(arguments, waypoint.Path)
+				continue
+			}
+
+			arguments = append(arguments, shell.Arguments[i])
+		}
+
+		exec.Command(shl.Name, arguments...).Start()
 	},
+}
+
+type commandShell struct {
+	Name      string
+	Arguments []string
+}
+
+func getShell() commandShell {
+	// We have to manually add shells since we also need to know how to run commands in them
+	var shells = []commandShell{
+		{
+			Name:      "cmd",
+			Arguments: []string{"/c", "start"},
+		},
+		{
+			Name:      "powershell",
+			Arguments: []string{"-Command"},
+		},
+		{
+			Name:      "pwsh",
+			Arguments: []string{"-Command"},
+		},
+		{
+			Name:      "bash",
+			Arguments: []string{"-c"},
+		},
+		{
+			Name:      "zsh",
+			Arguments: []string{"-c"},
+		},
+	}
+
+	for i := 0; i < len(shells); i++ {
+		if _, err := exec.LookPath(shells[i].Name); err == nil {
+			return shells[i]
+		}
+	}
+
+	return commandShell{}
 }
 
 func init() {
 	rootCmd.AddCommand(cdCmd)
 	cdCmd.PersistentFlags().StringP("shell", "s", "", "The name of the shell in your configuration file")
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// cdCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// cdCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
