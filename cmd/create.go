@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/rafaeltab/EasyCD/helper"
 	"github.com/spf13/cobra"
 )
 
@@ -34,9 +35,7 @@ For example, you can create a waypoint called "home" that points to your current
 			directory = wd
 		}
 
-		fmt.Println("Creating waypoint", waypointName, "in", directory)
-		// fmt.Println("create called " + directory)
-		
+		helper.AddWaypoint(waypointName, directory)
 	},
 }
 
