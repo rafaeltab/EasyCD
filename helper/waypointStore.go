@@ -13,7 +13,7 @@ type Waypoint struct {
 func AddWaypoint(name string, directory string) {
 	fmt.Println("Creating waypoint", name, "in", directory)
 
-	if(GetWaypoint(name).Name != "") {
+	if GetWaypoint(name).Name != "" {
 		fmt.Println("Waypoint with name", name, "already exists")
 		os.Exit(1)
 	}
@@ -23,7 +23,7 @@ func AddWaypoint(name string, directory string) {
 	currentStore = append(currentStore, Waypoint{
 		Name: name,
 		Path: directory,
-	})	
+	})
 
 	saveStore(currentStore)
 }
@@ -42,13 +42,36 @@ func GetWaypoint(name string) Waypoint {
 	return Waypoint{}
 }
 
+func DeleteWaypoint(name string) {
+	var currentStore []Waypoint = GetWaypoints()
+	var newStore []Waypoint = []Waypoint{}
+
+	var found = false
+
+	for i := 0; i < len(currentStore); i++ {
+		if currentStore[i].Name != name {
+			newStore = append(newStore, currentStore[i])
+			continue
+		}
+
+		found = true
+	}
+
+	if !found {
+		fmt.Println("Waypoint with name", name, "does not exist")
+		os.Exit(1)
+	}
+
+	saveStore(newStore)
+}
+
 func getStore() []Waypoint {
-	return GetConfiguration().Waypoints;
+	return GetConfiguration().Waypoints
 }
 
 func saveStore(newStore []Waypoint) {
-	var config = GetConfiguration();
-	config.Waypoints = newStore;
+	var config = GetConfiguration()
+	config.Waypoints = newStore
 
-	SaveConfiguration(config);
+	SaveConfiguration(config)
 }
